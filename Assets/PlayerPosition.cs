@@ -1,51 +1,50 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerPosition : MonoBehaviour
 {
     [SerializeField]
-   
-    List<GameObject> minnions;//Tao
+    List<GameObject> minnions; // Tạo danh sách các minion
     public GameObject minionPrefab;
-    protected float spawnTimer = 0f;
     protected float spawnDelay = 1f;
+
     private void Start()
     {
-        this.minnions = new List<GameObject>(); // Khoi tao
-
+        this.minnions = new List<GameObject>(); // Khởi tạo danh sách
     }
+
     void Update()
     {
-    
-        this.Spawn();
-        this.CheckMinionDead();
+        // Kiểm tra nếu phím E được nhấn
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            Spawn(); // Tạo minion khi nhấn phím E
+        }
+        CheckMinionDead(); // Kiểm tra minion đã chết
     }
+
     private void Spawn()
     {
-        this.spawnTimer += Time.deltaTime;
-        if (this.spawnTimer < this.spawnDelay) return;
-
-            this.spawnTimer = 0;
-
+        // Kiểm tra số lượng minion trước khi tạo
         if (this.minnions.Count >= 7) return;
-        
-        int index = this.minnions.Count + 1;
-        GameObject minion = Instantiate(this.minionPrefab);
-        minion.name = "Bom#" + index;
 
-        minion.transform.position = this.transform.position;
-        minion.gameObject.SetActive(true);
-        this.minnions.Add(minion);
+        GameObject minion = Instantiate(this.minionPrefab); // Tạo minion mới
+        minion.name = "Bom#" + (this.minnions.Count + 1); // Đặt tên cho minion
+
+        minion.transform.position = this.transform.position; // Đặt vị trí cho minion
+        minion.SetActive(true); // Kích hoạt minion
+        this.minnions.Add(minion); // Thêm vào danh sách
     }
+
     void CheckMinionDead()
     {
-        GameObject minion;
-        for(int i = 0; i < this.minnions.Count; i++)
+        for (int i = this.minnions.Count - 1; i >= 0; i--) // Lặp từ cuối đến đầu
         {
-            minion = this.minnions[i];
-            if(minion==null) this.minnions.RemoveAt(i);
+            if (this.minnions[i] == null) // Nếu minion đã chết
+            {
+                this.minnions.RemoveAt(i); // Xóa minion khỏi danh sách
+            }
         }
     }
 }

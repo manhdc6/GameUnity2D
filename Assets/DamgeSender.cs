@@ -24,6 +24,7 @@ public class DamgeSender : MonoBehaviour
             this.enemyCtrl.despawner.Despawer();
         else
             Destroy(gameObject);
+        EffectManager.instance.SpawnVFX("Explosion_A", transform.position, transform.rotation);
     }
 }
 

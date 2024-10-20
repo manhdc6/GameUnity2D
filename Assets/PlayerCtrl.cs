@@ -13,4 +13,4 @@ public class PlayerCtrl : MonoBehaviour
         this.damgeReceiver = GetComponent<DamgeReceiver>();
         this.playerStatus = GetComponent<PlayerStatus>();
     }
-}
+}   

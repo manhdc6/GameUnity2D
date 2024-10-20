@@ -11,6 +11,6 @@ public class SelfDestroy : MonoBehaviour
     }
     public virtual void Destroy()
     {
-        Destroy(gameObject);
+        Destroy(gameObject); 
     }
 }

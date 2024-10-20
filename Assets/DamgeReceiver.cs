@@ -5,7 +5,7 @@ using UnityEngine;
 public class DamgeReceiver : MonoBehaviour
 {
     [SerializeField]
-    protected int hp = 5;
+    public  int hp = 2;
     public virtual bool IsDead()
     {
         return this.hp <= 0;
