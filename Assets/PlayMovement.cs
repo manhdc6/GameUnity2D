@@ -21,7 +21,7 @@ public class PlayMovement : MonoBehaviour
     public float pressHorizontal = 0f;
     public float crouchSpeedModifier = 0.5f;
     public float moveSpeed = 5;
-    public float jumpPower = 5000f;
+    public float jumpPower = 10f;
     public bool isGrounded;
     public bool jump;
     public bool fall; // Khai báo biến fall
@@ -104,12 +104,13 @@ public class PlayMovement : MonoBehaviour
 
             if (JumpFlag)
             {
-                isGrounded = false;
-                rb2d.velocity = new Vector2(rb2d.velocity.x, 0); // Reset vận tốc Y trước khi nhảy
-                rb2d.AddForce(new Vector2(0f, jumpPower));
+                // Đặt lại vận tốc Y về 0 để tránh tích lũy vận tốc từ nhiều lần nhảy
+                rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower); // Reset vận tốc Y trước khi nhảy
+                // Kích hoạt animation nhảy
                 animator.SetTrigger("Jump");
-                jump = false; // Đặt lại trạng thái nhảy sau khi nhảy
-                animator.SetTrigger("Jump");
+                // Đặt lại cờ jump sau khi nhảy
+                jump = false;
+                isGrounded = false;  // Đặt lại trạng thái không còn đứng trên mặt đất
             }
         }
 
