@@ -27,6 +27,12 @@ public class PlayMovement : MonoBehaviour
     public bool fall; // Khai báo biến fall
     public bool isFacingRight = true;
     [SerializeField] public bool IsCrouch;
+    public AudioSource jumpAudioSource; // For jumping sound
+    public AudioSource runAudioSource;   // For running sound
+    public AudioSource crouchAudioSource; // For crouching sound
+    public AudioClip jumpClip;   // Assign this in the inspector
+    public AudioClip runClip;    // Assign this in the inspector
+    public AudioClip crouchClip; // Assign this in the inspector
 
     // Khai báo biến trạng thái Idle
     public bool isIdle;
@@ -38,6 +44,21 @@ public class PlayMovement : MonoBehaviour
         {
             animator = GetComponent<Animator>();
         }
+        if (jumpAudioSource == null)
+        {
+            jumpAudioSource = gameObject.AddComponent<AudioSource>(); // Create if not assigned
+        }
+        if (runAudioSource == null)
+        {
+            runAudioSource = gameObject.AddComponent<AudioSource>(); // Create if not assigned
+        }
+        if (crouchAudioSource == null)
+        {
+            crouchAudioSource = gameObject.AddComponent<AudioSource>(); // Create if not assigned
+        }
+        jumpAudioSource.clip = jumpClip;
+        runAudioSource.clip = runClip;
+        crouchAudioSource.clip = crouchClip;
     }
 
     void Update()
@@ -50,6 +71,7 @@ public class PlayMovement : MonoBehaviour
         {
             jump = true;  // Đặt cờ jump thành true
              // Kích hoạt trạng thái nhảy trong Animator
+
         }
 
         // Kiểm tra trạng thái ngồi
@@ -104,15 +126,24 @@ public class PlayMovement : MonoBehaviour
 
             if (JumpFlag)
             {
+                
+
                 // Đặt lại vận tốc Y về 0 để tránh tích lũy vận tốc từ nhiều lần nhảy
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpPower); // Reset vận tốc Y trước khi nhảy
+                Debug.Log("Jump initiated.");
+                jumpAudioSource.Play(); // Phát âm thanh nhảy
                 // Kích hoạt animation nhảy
                 animator.SetTrigger("Jump");
                 // Đặt lại cờ jump sau khi nhảy
                 jump = false;
                 isGrounded = false;  // Đặt lại trạng thái không còn đứng trên mặt đất
             }
+            
         }
+        
+
+        // Handle Crouching Sound
+        
 
         animator.SetBool("Crouch", CrouchFlag);
         #endregion
@@ -120,8 +151,43 @@ public class PlayMovement : MonoBehaviour
         #region Run & Fall Movement
         // Xử lý di chuyển
         this.velocity.x = this.pressHorizontal * this.moveSpeed;
+        if (Mathf.Abs(pressHorizontal) > 0 && isGrounded)
+        {
+            // Play run sound only if not crouching
+            if (!CrouchFlag)
+            {
+                if (!runAudioSource.isPlaying)
+                {
+                    runAudioSource.Play(); // Play run sound
+                }
+            }
+            else
+            {
+                // If crouching, stop the run sound
+                if (runAudioSource.isPlaying)
+                {
+                    runAudioSource.Stop(); // Stop running sound if crouching
+                }
+            }
+        }
+        else
+        {
+            // Stop running sound if not moving
+            if (runAudioSource.isPlaying)
+            {
+                runAudioSource.Stop(); // Stop running sound
+            }
+        }
+
         if (CrouchFlag)
+        {
             velocity.x *= crouchSpeedModifier;
+            if (!crouchAudioSource.isPlaying)
+            {
+                crouchAudioSource.Play(); // Play crouch sound
+            }
+        }
+        
 
         // Kiểm tra nếu nhân vật đang rơi, vẫn giữ lại vận tốc ngang
         if (!isGrounded && fall)
