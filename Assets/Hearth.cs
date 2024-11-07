@@ -21,8 +21,7 @@ public class Hearth : DamgeReceiver
             imageHearth.sprite = sprites[hp];
         }
         else
-        {
-            Debug.LogWarning("hp out of bounds: " + hp);
+        { 
             // Gán sprite mặc định hoặc xử lý khác
             imageHearth.sprite = sprites[0]; // hoặc sprite mặc định khác
         }

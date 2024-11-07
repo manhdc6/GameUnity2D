@@ -1,24 +1,31 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class FollowPlayer : MonoBehaviour
 {
     public Transform player;
     protected float speed = 5f;
     protected float disLimit = 0.65f;
+
     void Start()
     {
-        InvokeRepeating("Follow",3f,Time.deltaTime);    
+        InvokeRepeating("Follow", 3f, Time.deltaTime);
     }
 
     void Update()
     {
         this.Follow();
     }
+
     void Follow()
     {
+        // Kiểm tra nếu đối tượng player đã bị phá hủy hoặc null
+        if (player == null)
+        {
+            return; // Thoát khỏi hàm nếu player không còn tồn tại
+        }
+
         Vector3 distance = this.player.position - transform.position;
 
         if (distance.magnitude >= this.disLimit)
